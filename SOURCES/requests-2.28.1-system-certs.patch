@@ -1,0 +1,37 @@
+--- requests-2.28.1/requests/certs.py	2022-07-12 13:55:25.378079641 -0700
++++ requests-2.28.1/requests/certs.py.new	2022-07-12 13:57:03.834621295 -0700
+@@ -9,8 +9,13 @@
+ If you are packaging Requests, e.g., for a Linux distribution or a managed
+ environment, you can change the definition of where() to return a separately
+ packaged CA bundle.
++
++This Fedora-patched package returns "/etc/pki/tls/certs/ca-bundle.crt" provided
++by the ca-certificates RPM package.
+ """
+-from certifi import where
++def where():
++    """Return the absolute path to the system CA bundle."""
++    return '/etc/pki/tls/certs/ca-bundle.crt'
+ 
+ if __name__ == "__main__":
+     print(where())
+--- requests-2.28.1/setup.py	2022-06-29 08:09:11.000000000 -0700
++++ requests-2.28.1/setup.py.new	2022-07-12 13:58:33.830116402 -0700
+@@ -62,7 +62,6 @@
+     "charset_normalizer>=2,<3",
+     "idna>=2.5,<4",
+     "urllib3>=1.21.1,<1.27",
+-    "certifi>=2017.4.17",
+ ]
+ test_requirements = [
+     "pytest-httpbin==0.0.7",
+--- requests-2.28.1/setup.cfg	2022-06-29 08:09:11.000000000 -0700
++++ requests-2.28.1/setup.cfg.new	2022-07-12 13:58:19.619038220 -0700
+@@ -4,7 +4,6 @@
+     socks
+     use_chardet_on_py3
+ requires-dist =
+-    certifi>=2017.4.17
+     charset_normalizer>=2,<3
+     idna>=2.5,<4
+     urllib3>=1.21.1,<1.27
